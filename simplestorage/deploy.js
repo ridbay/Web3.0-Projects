@@ -17,8 +17,12 @@ async function main() {
   const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
   const contract = await contractFactory.deploy();
 
-  //   const deploymentReceipt = contract.deployTransaction.wait(1)
-  //   console.log(deploymentReceipt);
+  //Get transaction receipts
+  console.log("This is transaction receipt");
+  const transactionReceipt = await contract.deployTransaction.wait(1); // 1 is one block confirmation before getting the receipt
+  console.log(transactionReceipt);
+  console.log("This is deployment transaction or transaction response");
+  console.log(contract.deployTransaction);
 }
 
 main();
