@@ -1,15 +1,22 @@
 const ethers = require("ethers");
 const fs = require("fs-extra");
-
+require("dotenv").config();
 async function main() {
   try {
     const provider = new ethers.providers.JsonRpcProvider(
-      "http://127.0.0.1:7545" //Ganache RPC
+      process.env.RPC_URL //Ganache RPC
     );
-    const wallet = new ethers.Wallet(
-      "78292689791e5295800f700ed006c624e1cca11a61bbb2af03262de71a415e26", //One account private from ganache
-      provider
+    // const wallet = new ethers.Wallet(
+    //   process.env.PRIVATE_KEY, //One account private from ganache
+    //   provider
+    // );
+    const encryptedJson = fs.readFileSync("./.encryptedKey.json", "utf8");
+    const walletFromJson = new ethers.Wallet.fromEncryptedJsonSync(
+      encryptedJson,
+      process.env.PRIVATE_KEY_PASSWORD
     );
+    const wallet = await walletFromJson.connect(provider);
+
     const abi = fs.readFileSync(
       "./SimpleStorage_sol_SimpleStorage.abi",
       "utf8"
